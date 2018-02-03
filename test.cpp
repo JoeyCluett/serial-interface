@@ -22,10 +22,11 @@ int main(int argc, char* argv[]) {
 
 	SerialController sc(argv[1]);
 
-	// setup basic 8n1 serial protocol
+	// setup basic 8n1 (9600) serial protocol
 	sc.set_WordSize(WordSize_8);
 	sc.set_Parity(Parity_NONE);
 	sc.set_StopBits(StopBits_1);
+	sc.set_BaudRate(B9600);
 
 	// start serial communications
 	sc.start();
