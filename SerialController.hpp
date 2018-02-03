@@ -46,11 +46,22 @@ enum Parity {
 };
 
 enum WordSize {
-    WordSize_7, WordSize_8
+    WordSize_5,
+    WordSize_6,
+    WordSize_7, 
+    WordSize_8
 };
 
 enum StopBits {
-    StopBits_1, StopBits_2
+    StopBits_1, 
+    StopBits_2
+};
+
+enum BaudRate {
+    BaudRate_9600    = B9600,
+    BaudRate_19200   = B19200,
+    BaudRate_57600   = B57600,
+    BaudRate_115200  = B115200
 };
 
 class SerialController {
@@ -83,7 +94,7 @@ public:
     void writeChunk(char* buffer, int bufSize);
 
     // set the read/write speeds for the serial port
-    void set_BaudRate(int baudrate);
+    void set_BaudRate(BaudRate baudrate);
 
     // set odd/even/no parity for this serial port
     void set_Parity(Parity parity);
@@ -168,7 +179,7 @@ void SC::writeChunk(char* buffer, int bufSize) {
         bytes_writ += write(fd, buffer+bytes_writ, bufSize-bytes_writ);
 }
 
-void SC::set_BaudRate(int baudrate) {
+void SC::set_BaudRate(BaudRate baudrate) {
     cfsetispeed(&tty, baudrate);
     cfsetospeed(&tty, baudrate);
 }
@@ -208,6 +219,14 @@ void SC::set_StopBits(StopBits stopbits) {
 
 void SC::set_WordSize(WordSize wordsize) {
     switch(wordsize) {
+        case WordSize_5:
+            tty.c_cflag &= ~CSIZE;
+            tty.c_cflag |= CS5;
+            break;
+        case WordSize_6:
+            tty.c_cflag &= ~CSIZE;
+            tty.c_cflag |= CS6;
+            break;
         case WordSize_7:
             tty.c_cflag &= ~CSIZE;
             tty.c_cflag |= CS7;
