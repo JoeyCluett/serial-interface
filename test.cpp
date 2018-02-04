@@ -2,11 +2,14 @@
 #include <string.h> // strlen()
 #include <unistd.h> // usleep()
 #include "SerialController.hpp"
-
+ 
 /*
 	In this setup, RX is tied directly to TX
 	the physical serial controller acts as a 
 	simple echo device
+
+	This program continuously sends data over
+	the serial line
 */
 
 using namespace std;
@@ -22,11 +25,11 @@ int main(int argc, char* argv[]) {
 
 	SerialController sc(argv[1]);
 
-	// setup basic 8n1 (9600) serial protocol
+	// setup basic 8n1 (115200) serial protocol
 	sc.set_WordSize(WordSize_8);
 	sc.set_Parity(Parity_NONE);
 	sc.set_StopBits(StopBits_1);
-	sc.set_BaudRate(BaudRate_9600);
+	sc.set_BaudRate(BaudRate_115200);
 
 	// start serial communications
 	sc.start();
@@ -42,13 +45,14 @@ int main(int argc, char* argv[]) {
 		// write and then read a string of chars
 		char* hw = "Hello World";
 		sc.writeBuffer(hw, strlen(hw));
-		sc.readBuffer(buf, BUF_LENGTH);
+		int n = sc.readBuffer(buf, BUF_LENGTH);
 
 		// print the received information
-		cout << buf << endl;
+		if(n > 0)
+			cout << buf << endl;
 
 		// sleep for ~100ms
-		usleep(100000);
+		//usleep(100000);
 	}
 
 	// pointless return statement
