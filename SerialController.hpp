@@ -58,8 +58,20 @@ enum StopBits {
 };
 
 enum BaudRate {
+    BaudRate_50      = B50,
+    BaudRate_75      = B75,
+    BaudRate_110     = B110,
+    BaudRate_134     = B134,
+    BaudRate_150     = B150,
+    BaudRate_200     = B200,
+    BaudRate_300     = B300,
+    BaudRate_600     = B600,
+    BaudRate_1200    = B1200,
+    BaudRate_2400    = B2400,
+    BaudRate_4800    = B4800,
     BaudRate_9600    = B9600,
     BaudRate_19200   = B19200,
+    BaudRate_38400   = B38400,
     BaudRate_57600   = B57600,
     BaudRate_115200  = B115200
 };
@@ -180,8 +192,10 @@ void SC::writeChunk(char* buffer, int bufSize) {
 }
 
 void SC::set_BaudRate(BaudRate baudrate) {
-    cfsetispeed(&tty, baudrate);
-    cfsetospeed(&tty, baudrate);
+    // most systems do not support different input and output speeds
+    // so we set both to the same value
+    cfsetispeed(&tty, (int)baudrate); // input speed
+    cfsetospeed(&tty, (int)baudrate); // output speed
 }
 
 void SC::set_Parity(Parity parity) {
